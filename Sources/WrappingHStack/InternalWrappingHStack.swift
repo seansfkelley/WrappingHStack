@@ -40,7 +40,7 @@ struct InternalWrappingHStack: View {
             return firstOfEach
         }()
     }
-    
+
     func shouldHaveSideSpacers(line i: Int) -> Bool {
         if case .constant = spacing {
             return true
@@ -66,7 +66,7 @@ struct InternalWrappingHStack: View {
     func hasExactlyOneElement(line i: Int) -> Bool {
         startOf(line: i) == endOf(line: i)
     }
-    
+
     var body: some View {
         VStack(alignment: alignment, spacing: lineSpacing) {
             ForEach(0 ..< totalLines, id: \.self) { lineIndex in
@@ -74,18 +74,18 @@ struct InternalWrappingHStack: View {
                     if alignment == .center || alignment == .trailing, shouldHaveSideSpacers(line: lineIndex) {
                         Spacer(minLength: 0)
                     }
-                    
+
                     ForEach(startOf(line: lineIndex) ... endOf(line: lineIndex), id: \.self) {
                         if case .dynamicIncludingBorders = spacing,
                             startOf(line: lineIndex) == $0
                         {
                             Spacer(minLength: spacing.minSpacing)
                         }
-                        
+
                         if case .any(let anyView) = contentManager.items[$0], contentManager.isVisible(viewIndex: $0) {
                             anyView
                         }
-                        
+
                         if endOf(line: lineIndex) != $0 {
                             if case .any = contentManager.items[$0], !contentManager.isVisible(viewIndex: $0) { } else {
                                 if case .constant(let exactSpacing) = spacing {
@@ -99,12 +99,13 @@ struct InternalWrappingHStack: View {
                             Spacer(minLength: spacing.minSpacing)
                         }
                     }
-                    
+
                     if alignment == .center || alignment == .leading, shouldHaveSideSpacers(line: lineIndex) {
                         Spacer(minLength: 0)
                     }
                 }
-                .frame(maxWidth: .infinity)
+                .fixedSize(horizontal: true, vertical: false)
+                // .frame(maxWidth: .infinity)
             }
         }
     }
